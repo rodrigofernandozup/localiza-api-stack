@@ -1,0 +1,15 @@
+    - name: dynamodb-runtime-{{project_name | to_kebab}}
+      type: dynamodb-runtime
+      properties:
+        table_name: {{table_name}}
+        hash_key: {{hash_key}}
+        hash_key_type: HASH
+        range_key: {{range_key}}
+        range_key_type: RANGE
+        additional_attributes: 
+        - name: {{hash_key}}
+          type: "{{hash_key_type_value}}"
+        - name: {{range_key}}
+          type: "{{range_key_type_value}}"
+        tech_team_email: {{tech_team_email}}
+        owner_team_email: {{owner_team_email}}

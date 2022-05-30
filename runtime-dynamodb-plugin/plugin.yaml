@@ -1,0 +1,85 @@
+name: runtime-dynamodb-plugin
+description: Plug-in para provisionar o AWS DynamoDB.
+types:
+- app
+inputs:
+- label: Table Name
+  type: text
+  name: table_name
+  pattern: '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*'
+  default: ""  
+- label: Hash Key
+  type: text
+  name: hash_key
+  default: ""
+- label: Hash Key Type
+  type: text
+  name: hash_key_type
+  items:
+    - "Boolean"
+    - "Number"
+    - "String"  
+- label: Range Key
+  type: text
+  name: range_key
+  default: ""  
+- label: Range Key Type
+  type: text
+  name: range_key_type
+  items:
+    - "Boolean"
+    - "Number"
+    - "String" 
+- label: Tech Team Email
+  type: text
+  name: tech_team_email
+  default: ""  
+- label: Owner Team Email
+  type: text
+  name: owner_team_email
+  default: ""  
+
+computedInputs:
+  "hash_key_type_value": "{{hash_key_type[0]}}"
+  "range_key_type_value": "{{range_key_type[0]}}"
+
+hooks:
+#oam.yaml            
+  - type: edit
+    trigger: before-render
+    path: "oam.yaml"
+    changes:
+      - search:
+          string: "components"
+          insert-after:
+            snippet: snippets/oam.txt
+          when:
+            not-exists-snippet: snippets/oam.txt    
+      - search:
+          string: "type: microservice"
+          insert-after:
+            value: "      traits:\n"
+          when:
+            not-exists: "traits:"     
+      - search:
+          string: "traits"
+          insert-after:
+            snippet: snippets/traits.txt
+          when:
+            not-exists-snippet: snippets/traits.txt                    
+
+displayName: Runtime DynamoDB
+
+picture: "plugin.png"
+
+category: database
+
+about: about.md
+
+usage: usage.md
+
+useCase: useCase.md
+
+implementation: implementation.md
+
+technologies: ["AWS DynamoDB"]

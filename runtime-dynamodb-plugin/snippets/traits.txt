@@ -1,0 +1,3 @@
+        - type: dynamodb-attachment
+          properties:
+            table_name: {{table_name}}

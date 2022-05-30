@@ -1,0 +1,8 @@
+type: app
+displayName: Template DynamoDB
+description: Template para desenvolver uma API completa usando C# e REST, em execução em um cluster de contêiner com suporte a DynamoDB.
+template: localiza-api-stack/api-template
+plugins:
+  - plugin: localiza-api-stack/errorhandler-app-plugin
+  - plugin: localiza-api-stack/repository-app-plugin
+  - plugin: localiza-api-stack/runtime-dynamodb-plugin

@@ -1,0 +1,6 @@
+type: app
+description: Template para desenvolver uma API completa usando C#, podendo executar em um cluster de contêiner.
+
+template: localiza-api-stack/api-template
+plugins:
+ - plugin: localiza-api-stack/errorhandler-app-plugin
