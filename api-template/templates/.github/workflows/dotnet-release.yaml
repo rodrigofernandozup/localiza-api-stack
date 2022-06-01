@@ -1,0 +1,45 @@
+name: 'Build and Release'
+on:
+  push:
+    branches:
+      - main
+
+jobs:     
+  build:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        dotnet-version: ['6.0.x']
+    container:
+      image: mcr.microsoft.com/dotnet/sdk:6.0
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.nuget/packages
+          key: {{'${{ runner.os }}'}}-nuget-{{'${{ hashFiles("**/*.csproj") }}'}}
+          restore-keys: |
+            {{'${{ runner.os }}'}}-nuget-
+      - name: Setup .NET Core SDK {{'${{ matrix.dotnet-version }}'}}
+        uses: actions/setup-dotnet@v1.8.1
+        with:
+          dotnet-version: {{'${{ matrix.dotnet-version }}'}}
+      - name: Install dependencies
+        run: dotnet restore
+        working-directory: ./src
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+        working-directory: ./src
+      - name: Build
+        run: dotnet publish "{{project_name}}.Api/{{project_name}}.Api.csproj" --no-restore -c Release -o ./release
+        working-directory: ./src
+      - uses: actions/cache@v1
+        with:
+          path: ./release
+          key: {{'${{ github.sha }}'}}-release
+#TODO: push da imagem
+#TODO chamar o curl 
+                    # curl --location --request PUT 'http://runtime-engine-api.runtime-controlplane.sbox.stackspot.com/apps/{{global_inputs.app_runtime_id}}/deploys/' \
+                    # --header 'Content-Type: multipart/form-data' \
+                    # --form 'spec=@"oam.yml"' \
+                    # --form 'target="b448700c-33d9-4c8c-9852-3cd9425c3d58"'    
