@@ -16,9 +16,10 @@ inputs:
     items:
       - "net5.0"  
       - "net6.0"
-
+                                      
 global-computed-inputs:
   project_type: "Api"
+  project_name_formated: "{{project_name | to_kebab}}"
   src_base_path: ""
 
 computed-inputs: 
@@ -26,6 +27,10 @@ computed-inputs:
   package: "{% if global_inputs.framework == 'net6.0' %}{{'StackSpot.Template.Rest'}}{% else %}{{'StackSpot.Template.Rest.5.0'}}{% endif %}"
 
 hooks:
+  - type: run-script
+    trigger: before-render
+    script: scripts/script.py
+
 #package / apply template / install dotnet-format
   - type: run
     trigger: after-render
@@ -45,6 +50,14 @@ hooks:
       - dotnet new tool-manifest
       - dotnet tool install --local dotnet-format  
 
+lifecycle:
+  deploy:
+    deploy-command: | 
+                    curl --location --request PUT 'http://runtime-engine-api.runtime-controlplane.sbox.stackspot.com/apps/{{global_inputs.app_runtime_id}}/deploys/' \
+                    --header 'Content-Type: multipart/form-data' \
+                    --form 'spec=@"oam.yml"' \
+                    --form 'target="b448700c-33d9-4c8c-9852-3cd9425c3d58"'  
+                    
 displayName: Rest - Template
 
 picture: "template.png"
