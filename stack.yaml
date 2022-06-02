@@ -20,7 +20,7 @@ technologies:
   - AWS DynamoDB
   - Docker
   - AWS ECS/Fargate 
-about: docs/about.md
+about: api-template/docs/about.md
 useCases:
   - title: Basic API
     content: api-template/docs/useCase.md
