@@ -1,0 +1,17 @@
+name: sample-dynamo-plugin
+description: Cria um exemplo completo de comunicação com o DynamoDB.
+display-name: sample-dynamo-plugin
+picture: plugin.png
+category: backend # Ref: https://docs.stackspot.com/latest/docs/creators-guide/yaml/#category
+compatibility:
+  - net5.0
+  - net6.0
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies: # Ref: https://docs.stackspot.com/latest/docs/creators-guide/yaml/#technologies
+  - "Api"
+  - "DynamoDB"
+types:
+  - app
