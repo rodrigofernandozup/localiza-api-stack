@@ -21,9 +21,10 @@ technologies:
   - Docker
   - AWS ECS/Fargate 
 about: docs/about.md
-use-cases:
+useCases:
   - title: Basic API
-    content: docs/use-case.md
-    stackfile: 
-      - stackfiles/basic-api.yaml
-      - stackfiles/dynamo.yaml
+    content: api-template/docs/useCase.md
+    stackfile: stackfiles/basic-api.yaml
+  - title: Dynamo 
+    content: sample-dynamo-plugin/docs/use-case.md
+    stackfile: stackfiles/dynamo.yaml
