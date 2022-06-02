@@ -1,4 +1,4 @@
-namespace LocalizaApp.Domain;
+namespace {{project_name}}.Domain;
 
 public class Customer
 {

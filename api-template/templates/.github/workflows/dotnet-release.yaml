@@ -17,13 +17,13 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: ~/.nuget/packages
-          key: {{${{ runner.os }}}}-nuget-{{${{ hashFiles('**/*.csproj') }}}}
+          key: {{'${{ runner.os }}'}}-nuget-{{"${{ hashFiles('**/*.csproj') }}"}}
           restore-keys: |
-            {{${{ runner.os }}}}-nuget-
-      - name: Setup .NET Core SDK {{${{ matrix.dotnet-version }}}}
+            {{'${{ runner.os }}'}}-nuget-
+      - name: Setup .NET Core SDK {{'${{ matrix.dotnet-version }}'}}
         uses: actions/setup-dotnet@v1.8.1
         with:
-          dotnet-version: {{${{ matrix.dotnet-version }}}}       
+          dotnet-version: {{'${{ matrix.dotnet-version }}'}}       
       - name: Install dependencies
         run: dotnet restore {{project_name}}.Api.sln
         working-directory: ./
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: ./src/release
-          key: {{${{ github.sha }}}}-release
+          key: {{'${{ github.sha }}'}}-release
 
   sast: 
     name: Security testing 
@@ -62,11 +62,11 @@ jobs:
       run: | 
         snyk test --all-projects --json --json-file-output=reports/snyk.json
       env:
-          SNYK_TOKEN: {{${{ secrets.SNYK_TOKEN }}}}
+          SNYK_TOKEN: {{'${{ secrets.SNYK_TOKEN }}'}}
     - name: Running Horus Security
       id: step_horusec
       env:
-        HORUSEC_CLI_REPOSITORY_AUTHORIZATION: {{${{ secrets.HORUSEC_CLI_REPOSITORY_AUTHORIZATION }}}}
+        HORUSEC_CLI_REPOSITORY_AUTHORIZATION: {{'${{ secrets.HORUSEC_CLI_REPOSITORY_AUTHORIZATION }}'}}
       run: |
         curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
         horusec start -p="./" -e="true" 
@@ -75,11 +75,11 @@ jobs:
       with:
           args: -v --all-policies
       env:
-          GITHUB_PUSH_BEFORE_SHA: {{${{ github.event.before }}}}
-          GITHUB_PUSH_BASE_SHA: {{${{ github.event.base }}}}
-          GITHUB_PULL_BASE_SHA: {{${{ github.event.pull_request.base.sha }}}}
-          GITHUB_DEFAULT_BRANCH: {{${{ github.event.repository.default_branch }}}}
-          GITGUARDIAN_API_KEY: {{${{ secrets.GITGUARDIAN_API_KEY }}}}
+          GITHUB_PUSH_BEFORE_SHA: {{'${{ github.event.before }}'}}
+          GITHUB_PUSH_BASE_SHA: {{'${{ github.event.base }}'}}
+          GITHUB_PULL_BASE_SHA: {{'${{ github.event.pull_request.base.sha }}'}}
+          GITHUB_DEFAULT_BRANCH: {{'${{ github.event.repository.default_branch }}'}}
+          GITGUARDIAN_API_KEY: {{'${{ secrets.GITGUARDIAN_API_KEY }}'}}
 
   secrets:
     name: Secrets
@@ -92,11 +92,11 @@ jobs:
           fetch-depth: 0
       - name: Run secrets scan
         env:
-          GITGUARDIAN_API_KEY: {{${{ secrets.GITGUARDIAN_API_KEY }}}}
-          GITHUB_DEFAULT_BRANCH: {{${{ github.event.repository.default_branch }}}}
-          GITHUB_PULL_BASE_SHA: {{${{ github.event.pull_request.base.sha }}}}
-          GITHUB_PUSH_BASE_SHA: {{${{ github.event.base }}}}
-          GITHUB_PUSH_BEFORE_SHA: {{${{ github.event.before }}}}
+          GITGUARDIAN_API_KEY: {{'${{ secrets.GITGUARDIAN_API_KEY }}'}}
+          GITHUB_DEFAULT_BRANCH: {{'${{ github.event.repository.default_branch }}'}}
+          GITHUB_PULL_BASE_SHA: {{'${{ github.event.pull_request.base.sha }}'}}
+          GITHUB_PUSH_BASE_SHA: {{'${{ github.event.base }}'}}
+          GITHUB_PUSH_BEFORE_SHA: {{'${{ github.event.before }}'}}
         uses: GitGuardian/ggshield-action@master
         with:
           args: --verbose --all-policies          
@@ -117,7 +117,7 @@ jobs:
         uses: docker/login-action@v1
         with:
           username: stackspot
-          password: {{${{ secrets.DOCKER_HUB_TOKEN }}}}
+          password: {{'${{ secrets.DOCKER_HUB_TOKEN }}'}}
       
       - name: Build and push
         id: docker_build
@@ -125,7 +125,7 @@ jobs:
         with:
           push: true
           file: ./src/{{project_name}}.Api/{{project_name}}.Api.csproj/Dockerfile
-          tags: stackspot/dotnet-demo-api:{{${{ steps.vars.outputs.tag }}}}
+          tags: stackspot/dotnet-demo-api:{{'${{ steps.vars.outputs.tag }}'}}
 
   runtime-engine-deploy:
     needs: docker_hub
@@ -136,5 +136,5 @@ jobs:
         run: |
               curl --location --request PUT 'https://runtime-engine-api.runtime-controlplane.sbox.stackspot.com/apps/{{global_inputs.app_runtime_id}}/deploys/' \
               --header 'Content-Type: multipart/form-data' \
-              --form 'spec=@"${{ github.workspace }}/oam.yaml"' \
+              --form 'spec=@"{{'${{ github.workspace }}'}}/oam.yaml"' \
               --form 'target="b448700c-33d9-4c8c-9852-3cd9425c3d58"'  

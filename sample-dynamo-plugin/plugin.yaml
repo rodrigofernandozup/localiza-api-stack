@@ -15,3 +15,24 @@ technologies: # Ref: https://docs.stackspot.com/latest/docs/creators-guide/yaml/
   - "DynamoDB"
 types:
   - app
+
+hooks:
+  #dependencyinjection
+  - type: edit
+    trigger: before-render
+    path: "{{computed_inputs.base_path}}/src/{{project_name}}.Infrastructure/DependencyInjection.cs"
+    changes:
+      - search:
+          string: "return services;"
+          insert-before:
+            value: "services.AddScoped<ICustomerRepository, CustomerRepository>();"
+          when:
+            not-exists: "services.AddScoped<ICustomerRepository, CustomerRepository>();"
+   
+      - search:
+          string: "using"
+          insert-before:
+            value: "using {{project_name}}.Domain.Interfaces.Repositories; \n
+using {{project_name}}.Infrastructure.Repositories;"
+          when:
+            not-exists: "using {{project_name}}.Infrastructure.Repositories;"

@@ -16,9 +16,13 @@ public class CustomerController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(LoadCustomerResult), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(StackSpot.ErrorHandler.HttpResponse), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(StackSpot.ErrorHandler.HttpResponse), (int)HttpStatusCode.NoContent)]
     public async Task<IActionResult> Post([FromBody] LoadCustomerCommand command)
     {
         var result = await _mediator.Send(command);
-        return Ok(result);
+        if(string.IsNullOrEmpty(result?.Id))
+            return NoContent();
+        else
+            return Ok(result);
     }
 }
