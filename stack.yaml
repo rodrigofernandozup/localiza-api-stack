@@ -24,4 +24,6 @@ about: docs/about.md
 use-cases:
   - title: Basic API
     content: docs/use-case.md
-    stackfile: stackfiles/basic-api.yaml
+    stackfile: 
+      - stackfiles/basic-api.yaml
+      - stackfiles/dynamo.yaml
